@@ -1,0 +1,44 @@
+{
+  "name": "elemt",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build:prod": "vue-cli-service build",
+    "build:stage": "vue-cli-service build --mode staging"
+  },
+  "dependencies": {
+    "@element-plus/icons": "^0.0.11",
+    "axios": "^0.21.1",
+    "core-js": "^3.6.5",
+    "default-passive-events": "^2.0.0",
+    "echarts": "^5.4.0",
+    "element-plus": "^1.0.2-beta.71",
+    "file-saver": "^2.0.5",
+    "js-md5": "^0.7.3",
+    "jszip": "^3.10.1",
+    "vue": "^3.0.0",
+    "vue-json-excel": "^0.3.0",
+    "vue-router": "^4.0.0-0",
+    "vuedraggable": "^4.1.0",
+    "vuex": "^4.0.0-0",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "~4.5.0",
+    "@vue/cli-plugin-router": "~4.5.0",
+    "@vue/cli-plugin-vuex": "~4.5.0",
+    "@vue/cli-service": "~4.5.0",
+    "@vue/compiler-sfc": "^3.0.0",
+    "babel-plugin-transform-remove-console": "^6.9.4",
+    "less": "^3.0.4",
+    "less-loader": "^5.0.0",
+    "script-loader": "^0.7.2",
+    "terser-webpack-plugin": "^5.3.1"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
+}
