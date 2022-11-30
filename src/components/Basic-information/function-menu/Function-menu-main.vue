@@ -29,35 +29,30 @@
         :header-cell-style="{ textAlign: 'center' }"
       >
         <!-- <el-table-column type="selection"> </el-table-column> -->
-        <el-table-column prop="title" label="菜单名称" width="150">
-        </el-table-column>
-        <el-table-column prop="sortid" label="显示顺序" width="100">
-        </el-table-column>
+        <el-table-column prop="menu_name" label="菜单名称" width="150"></el-table-column>
+        <el-table-column prop="menu_order" label="显示顺序" width="100"></el-table-column>
         <el-table-column prop="pid" label="上级菜单" width="150">
           <template #default="scope">{{
             scope.row.pid == 0 ? "根菜单" : fnPid(scope.row.pid)
           }}</template>
         </el-table-column>
-        <el-table-column prop="icon" label="图标" width="50">
+        <el-table-column prop="menu_ico" label="图标" width="50">
           <template #default="scope">
-             <i :class="scope.row.icon"></i>
+             <i :class="scope.row.menu_ico"></i>
            </template>
         </el-table-column>
-         <el-table-column prop="path" label="路由地址"> </el-table-column>
+        <el-table-column prop="route_url" label="路由地址"> </el-table-column>
         <el-table-column prop="redirect" label="重定向"> </el-table-column>
-        <el-table-column prop="component" label="组件路径"> </el-table-column>
+        <el-table-column prop="route_path" label="组件路径"> </el-table-column>
 
-        <el-table-column prop="sidebar" label="使用状态" width="150">
+        <el-table-column prop="broadside_status" label="使用状态" width="150">
           <template #default="scope">{{
-            scope.row.sidebar == 1 ? "已在侧边栏使用" : "未在侧边栏使用"
+            scope.row.broadside_status == 2 ? "已在侧边栏使用" : "未在侧边栏使用"
           }}</template>
         </el-table-column>
-
         <el-table-column label="操作" width="150">
           <template #default="scope">
-            <el-button size="mini" @click="handleEdit(scope.$index, scope.row)"
-              >编辑</el-button
-            >
+            <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
             <el-popconfirm
               confirmButtonText="确定"
               cancelButtonText="取消"
@@ -67,7 +62,7 @@
               @confirm="handleDelete(scope.$index, scope.row)"
             >
               <template #reference>
-                <el-button  size="mini" type="danger">删除</el-button>
+                <el-button size="mini" type="danger">删除</el-button>
               </template>
             </el-popconfirm>
           </template>
@@ -119,7 +114,6 @@ export default {
     this.postSelectRouterpages();
     this.postRouterpages();
   },
-  computed: {},
   methods: {
     fnPid(pid) {
       if (pid != undefined) {
@@ -143,9 +137,10 @@ export default {
           background: 'rgba(0, 0, 0, 0.7)'
         });
       let router = await AllQueryRouterList(data);
-      if (router.code == 2000) {
-        this.tableData = router.data;
-        this.total = router.total
+      if (router.status == 200) {
+        this.tableData = router.data.list;
+        this.total = router.count
+        console.log(this.tableData)
         this.loading.close();
       } else {
         this.loading.close();
@@ -172,16 +167,16 @@ export default {
     // 删除
     async postDeleteRouterpages(row) {
       let data = await postDeleteRouterpage(row);
-      if (data.code == 2000) {
+      if (data.status == 200) {
         this.$message.success({
-          message: data.message,
+          message: data.msg,
           type: "success",
         });
         this.postRouterpages();
         this.postSelectRouterpages()
       } else {
         this.loading.close();
-        this.$message.error(data.message);
+        this.$message.error(data.msg);
       }
     },
 
@@ -209,7 +204,7 @@ export default {
       this.ishouAdd = true;
     },
     handleDelete(index, row) {
-      this.postDeleteRouterpages(row);
+      this.postDeleteRouterpages(row.member_menu_id);
     },
   },
 };

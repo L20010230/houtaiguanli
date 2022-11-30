@@ -1,10 +1,3 @@
-/*
- * @Author : your Name 
- * @Date : Do not edit 
- * @LastEditors : your Name 
- * @LastEditTime : Do not edit 
- * @Description : 
- */
 // 请求接口
 import axios from "axios";
 import router from '../router'
@@ -19,9 +12,8 @@ axios.interceptors.request.use(config => {
     let userList= JSON.parse(sessionStorage.getItem('userList'))
       // 判断本地的cookie中是否有token
     if (userList) {
-        console.log(userList)
-        if(userList.token){
-            config.headers['authorization'] =userList.token
+        if(userList){
+            config.headers['Authorization'] = userList
         }
     } else {
         // 跳转到登录页面(这里使用router，是因为路由文件引入到了此文件里)

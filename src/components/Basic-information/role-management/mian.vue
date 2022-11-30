@@ -48,16 +48,12 @@
         </el-table-column>
         <el-table-column prop="jsmc" label="角色名称">
         </el-table-column>
-
         <el-table-column prop="jslx" label="角色类型" :formatter='(row, column, cellValue, index)=>formatterFun(cellValue,jslxList)' >
         </el-table-column>
-
         <el-table-column prop="syzt" label="使用状态"  :formatter='(row, column, cellValue, index)=>formatterFun(cellValue,syztList)' >
         </el-table-column>
-
         <el-table-column prop="jszl" label="角色种类" :formatter='(row, column, cellValue, index)=>formatterFun(cellValue,jszlList)'>
         </el-table-column>
-      
         <el-table-column label="操作" width="250">
           <template #default="scope">
              <el-button size="mini" :disabled="(scope.row.id=='4000000000000007')?true:false"   @click="handleMenu(scope.$index, scope.row)">

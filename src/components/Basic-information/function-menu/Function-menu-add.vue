@@ -12,20 +12,20 @@
         label-width="150px"
         class="demo-ruleForm"
       >
-        <el-form-item label="菜单名称" prop="title">
-          <el-input v-model="ruleForm.title"></el-input>
+        <el-form-item label="菜单名称" prop="menu_name">
+          <el-input v-model="ruleForm.menu_name"></el-input>
         </el-form-item>
-        <el-form-item label="菜单URL" prop="path">
-          <el-input v-model="ruleForm.path"></el-input>
+        <el-form-item label="菜单URL" prop="url">
+          <el-input v-model="ruleForm.url"></el-input>
         </el-form-item>
-         <el-form-item label="重定向" >
+         <el-form-item label="重定向">
           <el-input v-model="ruleForm.redirect"></el-input>
         </el-form-item>
-        <el-form-item label="路由name" prop="name">
-          <el-input v-model="ruleForm.name"></el-input>
+        <el-form-item label="路由name" prop="route_url">
+          <el-input v-model="ruleForm.route_url"></el-input>
         </el-form-item>
-        <el-form-item label="路由组件路径" prop="component">
-          <el-input v-model="ruleForm.component"></el-input>
+        <el-form-item label="路由组件路径" prop="route_path">
+          <el-input v-model="ruleForm.route_path"></el-input>
         </el-form-item>
         <el-form-item label="上级菜单" prop="cascader">
           <el-cascader
@@ -34,24 +34,25 @@
             :clearable="true"
             :props="Props"
             class="cascader-box"
+            @change="changecal"
           ></el-cascader>
         </el-form-item>
-        <el-form-item label="显示顺序" prop="sortid">
-          <el-input type="number" v-model="ruleForm.sortid"></el-input>
+        <el-form-item label="显示顺序" prop="menu_order">
+          <el-input type="number" v-model="ruleForm.menu_order"></el-input>
         </el-form-item>
-        <el-form-item label="菜单图标" prop="icon">
-          <el-input v-model="ruleForm.icon"></el-input>
+        <el-form-item label="菜单图标" prop="menu_ico">
+          <el-input v-model="ruleForm.menu_ico"></el-input>
         </el-form-item>
-        <el-form-item label="是否加入侧边栏" prop="sidebar">
-          <el-radio-group v-model="ruleForm.sidebar">
-            <el-radio label="0"> 否 </el-radio>
-            <el-radio label="1"> 是 </el-radio>
+        <el-form-item label="是否加入侧边栏" prop="broadside_status">
+          <el-radio-group v-model="ruleForm.broadside_status">
+            <el-radio label="1"> 否 </el-radio>
+            <el-radio label="2"> 是 </el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="是否缓存组件" prop="keepAlive">
           <el-radio-group v-model="ruleForm.keepAlive">
-            <el-radio label="0"> 否 </el-radio>
-            <el-radio label="1"> 是 </el-radio>
+            <el-radio label="1"> 否 </el-radio>
+            <el-radio label="2"> 是 </el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item class="btn-box">
@@ -73,33 +74,32 @@ export default {
     return {
       shows: false,
       Props: {
-        value: "id",
+        value: "member_menu_id",
         label: "title",
         checkStrictly: true,
       },
       ruleForm: {
-        title: "",
-        name: "",
-        path: "",
+        menu_name: "",
+        url: "",
         redirect: "",
-        component: "",
-        icon: "",
-        sidebar: "0",
-        cascader: [0],
-        pid: "0",
-        sortid: 1,
+        route_url: "",
+        route_path: "",
+        cascader:[0],
+        pid:"0",
+        menu_order: "",
+        menu_ico: '',
         keepAlive:'0',
       },
       rules: {
-        title: [{ required: true, message: "请输入菜单名称", trigger: "blur" }],
-        path: [{ required: true, message: "请输入菜单URL", trigger: "blur" }],
-        name: [{ required: true, message: "请输入路由name", trigger: "blur" }],
-        component: [
+        menu_name: [{ required: true, message: "请输入菜单名称", trigger: "blur" }],
+        url: [{ required: true, message: "请输入菜单URL", trigger: "blur" }],
+        route_url: [{ required: true, message: "请输入路由name", trigger: "blur" }],
+        route_path: [
           { required: true, message: "请输入路由组件路径", trigger: "blur" },
         ],
         cascader:[{ required: true, message: "请输入菜单名称", trigger: "blur" }],
-        sortid:[{ required: true, message: "请输设置显示顺序", trigger: "blur" }],
-        sidebar: [
+        menu_order:[{ required: true, message: "请输设置显示顺序", trigger: "blur" }],
+        broadside_status: [
           {
             required: true,
             message: "请选择是否加入侧边栏",
@@ -117,17 +117,18 @@ export default {
   mounted() {
     // 修改
     this.shows = Object.keys(this.rowlist).length == 0 ? false : true;
-
     if (this.shows) {
       this.ruleForm = this.rowlist;
     }
   },
-
   methods: {
+    changecal(e){
+      console.log(e)
+    },
     // 添加接口
     async postAddrouterpages(row) {
       let data = await postAddrouterpage(row);
-      if (data.code == 2000) {
+      if (data.status == 200) {
         this.$message.success({
           message: data.message,
           type: "success",
@@ -140,7 +141,7 @@ export default {
     // 修改
     async postUpdateRouterListPages(row){
      let data = await postUpdateRouterListPage(row)
-      if (data.code == 2000) {
+      if (data.status == 200) {
         this.$message.success({
           message: data.message,
           type: "success",
@@ -154,9 +155,10 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
+          console.log(this.ruleForm.cascader)
           if (this.ruleForm.cascader.length) {
             let ids = this.ruleForm.cascader.length - 1;
-            this.ruleForm.pid =JSON.parse(JSON.stringify(this.ruleForm.cascader[ids]));
+            this.ruleForm.pid =JSON.parse(JSON.stringify(this.ruleForm.pid[ids]));
           }
           if (!this.shows) {
             this.postAddrouterpages(this.ruleForm);

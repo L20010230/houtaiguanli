@@ -25,7 +25,7 @@ export default {
     components: { MenuItem },
     setup(props){
         const store = useStore();
-       let funSelect=(e)=>{
+        let funSelect=(e)=>{
             store.dispatch('user/Navactive',e)
             sessionStorage.setItem("navactive",e);
         }

@@ -1,59 +1,53 @@
 <template>
   <div class="login-contaner">
-
- 
-  <div class="login-box">
-    <div class="top-boxs">
-        <h2 class="login-title">{{lgzcSt==0?"登录":"注册"}}</h2>
-        <div class="zc-btn" @click="lgzcBtn" >{{lgzcSt==1?"登录":"注册"}}</div>
-    </div>
-    <el-form
-      :model="ruleForm"
-      :rules="rules"
-      ref="ruleForm"
-      class="demo-ruleForm"
-      @keydown="loginKeydown"
-    >
-      <el-form-item label="用户名" prop="user_name">
-        <el-input v-model="ruleForm.user_name"></el-input>
-      </el-form-item>
-      <el-form-item label="密码" prop="password">
-        <el-input
-          type="password"
-          v-model="ruleForm.password"
-          autocomplete="off"
-        ></el-input>
-      </el-form-item>
-        <el-form-item v-if="lgzcSt==1"  label="确认密码" prop="pass">
-        <el-input
-          type="password"
-          v-model="ruleForm.pass"
-          autocomplete="off"
-        ></el-input>
-      </el-form-item>
-      <!-- <el-form-item  label="验证码" prop="verificationCode">
-        <div class="flex">
-          <el-input
-            class="veri-mr"
-            v-model="ruleForm.verificationCode"
-          ></el-input>
-          <div @click="refreshCode" style="cursor: pointer;">
-              <Identify :identifyCode="identifyCode" ></Identify>
-          </div>
+    <div class="drop-shadow">
+      <div class="glass"></div>
+      <div class="login-box">
+        <div class="top-boxs">
+            <h2 class="login-title">{{lgzcSt==0?"登录":"注册"}}</h2>
+            <!-- <div class="zc-btn" @click="lgzcBtn" >{{lgzcSt==1?"登录":"注册"}}</div> -->
         </div>
-      </el-form-item> -->
-      <el-form-item >
-        <el-button v-if="lgzcSt==0"  class="login-btn" type="primary" :disabled='showlogin' @click="submitForm('ruleForm')">
-          {{showlogin?'登录中……':'登录'}}
-        </el-button>
-         <el-button v-if="lgzcSt==1"  class="login-btn" type="primary" :disabled='showlogin' @click="submitZcForm('ruleForm')">
-          {{showlogin?'注册中……':'注册'}}
-        </el-button>
-         
-      </el-form-item>
-    </el-form>
+        <el-form :model="ruleForm" :rules="rules" ref="ruleForm" class="demo-ruleForm" @keydown="loginKeydown">
+          <el-form-item label="用户名" prop="user_name">
+            <el-input v-model="ruleForm.user_name"></el-input>
+          </el-form-item>
+          <el-form-item label="密码" prop="password">
+            <el-input
+              type="password"
+              v-model="ruleForm.password"
+              autocomplete="off"
+            ></el-input>
+          </el-form-item>
+            <el-form-item v-if="lgzcSt==1"  label="确认密码" prop="pass">
+            <el-input
+              type="password"
+              v-model="ruleForm.pass"
+              autocomplete="off"
+            ></el-input>
+          </el-form-item>
+          <!-- <el-form-item  label="验证码" prop="verificationCode">
+            <div class="flex">
+              <el-input
+                class="veri-mr"
+                v-model="ruleForm.verificationCode"
+              ></el-input>
+              <div @click="refreshCode" style="cursor: pointer;">
+                  <Identify :identifyCode="identifyCode" ></Identify>
+              </div>
+            </div>
+          </el-form-item> -->
+          <el-form-item >
+            <el-button v-if="lgzcSt==0"  class="login-btn" type="primary" :disabled='showlogin' @click="submitForm('ruleForm')">
+              {{showlogin?'登录中……':'登录'}}
+            </el-button>
+            <el-button v-if="lgzcSt==1"  class="login-btn" type="primary" :disabled='showlogin' @click="submitZcForm('ruleForm')">
+              {{showlogin?'注册中……':'注册'}}
+            </el-button>
+          </el-form-item>
+        </el-form>
+      </div>
+    </div>
   </div>
-   </div>
 </template>
 
 <script>
@@ -188,8 +182,8 @@ export default {
     // 获取用户信息
     async getGetInfos(doc){
         let data = await getGetInfo(doc)
-        if(data.code===20000){
-           this.$store.dispatch('user/CloseTabList',[])
+        if(data.status === 200){
+            this.$store.dispatch('user/CloseTabList',[])
             this.$store.dispatch('user/LoginSt',2)
             this.$store.dispatch('user/UserList',data.data)
             let userList =JSON.parse(sessionStorage.getItem('userList'))
@@ -227,21 +221,21 @@ export default {
           this.$message.error('服务器异常请联系管理员');
           return
         }
-        if(data.code===20000){
+        if(data.status == 200){
           this.$store.dispatch('user/Roterlist',[]);
           this.$store.dispatch('user/RouterPath','/main/home');
-          
-          this.getGetInfos()
-          sessionStorage.setItem('userList',JSON.stringify(data.data))
+          this.$router.push("/main");
+          this.getGetInfos(data)
+          sessionStorage.setItem('userList',JSON.stringify(data.token))
         } else{
           this.loading.close();
           this.refreshCode()
-          this.$message.error(data.message);
+          this.$message.error(data.msg);
           this.showlogin = false 
         }
         if(this.showlogin){
           setTimeout(() => {
-             this.refreshCode()
+            this.refreshCode()
             this.loading.close();
             this.showlogin = false 
           }, 5000);
@@ -275,17 +269,41 @@ export default {
 };
 </script>
 <style lang="less" >
+.drop-shadow{
+    height: 100%;
+    width: 60%;
+    filter:  drop-shadow(0px 20px 10px rgba(0, 0, 0, 0.5));
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 .login-box .el-form-item__label{
   color: #fff;
    width: 80px;
 }
+.glass{
+  width: 100%;
+  height: 100%;
+  background: url('../../assets/imgs/login-bj.png');
+  background-size: cover;
+  background-position:center;
+  clip-path: inset(200px 200px);
+  filter: blur(20px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .login-contaner{
   width: 100vw;
   height: 100vh;
-  // background: #afdfe4;
-  // background-image: linear-gradient(to bottom right, #33a3dc, rgb(245, 148, 148) 20%,#2585a6,#9ff368,#90d7ec);
   background: url('../../assets/imgs/login-bj.png');
   position: relative;
+
+  background-position: center;
+  background-size: cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
   .login-title{
     font-size: 25px;
@@ -298,9 +316,7 @@ export default {
   }
   .login-box{
     width: 430px;
-    // height: 400px;
     border-radius: 10px;
-     background: url('../../assets/imgs/login-dl.png');
     position: absolute;
     top:50%;
     left: 50%;

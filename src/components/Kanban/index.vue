@@ -1,10 +1,18 @@
+<!--
+ * @Author : your Name 
+ * @Date : Do not edit 
+ * @LastEditors : your Name 
+ * @LastEditTime : Do not edit 
+ * @Description : 
+-->
+
 <template>
   <div class="board-column">
     <div class="board-column-header">
       {{ headerText }}
     </div>
     <draggable :list="list" class="board-column-content" :set-data="setData" item-key="id">
-      <template #item="{element}">
+      <template #default="{element}">
         <div  class="board-item">
           {{ element.name }}
         </div>

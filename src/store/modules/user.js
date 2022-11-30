@@ -1,3 +1,4 @@
+import { saveAs } from "file-saver";
 
 const state = {
     routeList: [],
@@ -12,17 +13,17 @@ const state = {
     handleMenu: {}, 
     isAsideWidth: true, // 侧边栏是否收起
     tabList:[] // tab页签存储
-
 };
 const getters = {};
 const mutations = {
     Roterlists(state, data) {
         state.routeList = data
         let arr = [{
-            id: 0,
+            member_menu_id: 0,
             title: "根菜单",
         }, ...data]
         state.routeListOpstion = arr
+        console.log(state.routeListOpstion)
     },
     RouterPaths(state, data) {
         state.routerpath = data
@@ -57,6 +58,7 @@ const mutations = {
 };
 const actions = {
     Roterlist({ commit }, data) {
+        console.log(data)
         commit('Roterlists', data)
     },
     RouterPath({ commit }, data) {

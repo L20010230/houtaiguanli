@@ -106,6 +106,7 @@ export default {
   },
   mounted() {
     this.AllUserpages();
+    console.log(22222)
   },
   computed: {},
   methods: {

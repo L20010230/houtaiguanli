@@ -2,9 +2,9 @@ import { createRouter,createWebHashHistory, createWebHistory } from 'vue-router'
 
 // import axios from 'axios'
 import stores from '../store/index'
-import {Router_tree} from '../util/router_tree'
+import { Router_tree } from '../util/router_tree'
 import { ElMessage } from 'element-plus'
-import {postRouterpage} from '../api/user'
+import { postRouterpage } from '../api/user'
 const routes = [
   {
     path: '/login',
@@ -77,11 +77,18 @@ router.beforeEach(async (to, from, next) => {
   if (to.path.indexOf('/main')!= -1 || to.path == '/404') {
     if (!stores.state.user.routeList.length) {
        await postRouterpage().then(( data ) => {
-          if (data.code == 2000) {
-            let routelist=JSON.parse(JSON.stringify(data.data))
-            let sidelist=JSON.parse(JSON.stringify(data.data))
-            let yijiList= Router_tree(routelist)
-            let mains= routes.filter(item=>item.path=='/main')[0]
+          if (data.status == 200) {
+            // 将后台返回数据替换为组件数据
+            data.data = JSON.parse(JSON.stringify(data.data).replace(/route_url/g,"name").replace(/route_path/g,"component").replace(/url/g,"path").replace(/broadside_status/g,"sidebar").replace(/menu_order/g,"sortid").replace(/menu_name/g,"title").replace(/menu_ico/g,"icon"))
+            data.data.map((item) => {
+              item['cascader'] = "[" + item.pid + "]"
+              item['keepAlive'] = "0"
+              item.sidebar = "" + item.sidebar  
+            })
+            let routelist = JSON.parse(JSON.stringify(data.data))
+            let sidelist = JSON.parse(JSON.stringify(data.data))
+            let yijiList = Router_tree(routelist)
+            let mains = routes.filter(item=>item.path=='/main')[0]
             mains.children =[ ...routePageLists,...yijiList];
             let urlsa = sessionStorage.getItem("urls");
             // 地址栏跳转页面的时候使用
@@ -100,7 +107,8 @@ router.beforeEach(async (to, from, next) => {
             }
             stores.dispatch('user/RouterPath',url)
             mains.redirect = url
-            let sidebarLsit= sidelist.filter(item=>item.sidebar==1)
+            // 判断路由条件            
+            let sidebarLsit= sidelist.filter(item=>item.sidebar == 2)
             let sidebarLsits=[]
             if(sidebarLsit.length){
               sidebarLsits= Router_tree(sidebarLsit);

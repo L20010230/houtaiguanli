@@ -1,6 +1,3 @@
-
-
-
 // 处理组件文件路径，最后面会讲为什么使用这种方法
 function routerCom(path) {
     return () => import(`@/${path}`)

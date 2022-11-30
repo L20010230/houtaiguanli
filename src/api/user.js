@@ -30,42 +30,73 @@ export let postRegister= (data) => {
     return axios({
         url: `${url}/register`,
         method: "post",
-        // 传参
         data,
     });
 }
 // 获取用户信息
 export let getGetInfo = (data)=>{
     return axios({
-        url: `${url}/GetInfo`,
+        url: '/Member/view',
         method: "get",
-        // 传参
         params: {
-            token:data
+            member_id:data.data.member_id
         }
     });
 }
-// 获取路由
+// 获取路由信息
 export let postRouterpage = (data)=>{
     return axios({
-        url: `${url}/routerpage`,
+        url: '/Member/get_member_menu',
         method: "post",
         data,
     });
 }
-// 用户管理获取路由
+// 获取菜单配置列表
 export let AllQueryRouterList = (data)=>{
     return axios({
-        url:  `${url}/queryrouterlist`,
+        url:  '/MemberMenu/index',
         method: "post",
         data,
     });
 }
-
+// 新增菜单配置-路由
+export let postAddrouterpage = (data)=>{
+    return axios({
+        url: '/MemberMenu/add',
+        method: "post",
+        data,
+    });
+}
+// 删除菜单配置-路由
+export let postDeleteRouterpage = (data)=>{
+    return axios({
+        url: 'MemberMenu/soft_delete',
+        method: "post",
+        data:{
+            member_menu_ids:data
+        }
+    });
+}
+// 修改菜单配置-路由
+export let postUpdateRouterListPage = (data)=>{
+    return axios({
+        url: '/MemberMenu/update',
+        method: "post",
+        data,
+    });
+}
+// 获取角色管理列表
+export let postAllRoleManagement = (data)=>{
+    return axios({
+        url: '/MemberRole/index',
+        method: "post",
+        data,
+    });
+}
 // 获取用户列表
 export let AllUserpage = (data)=>{
     return axios({
-        url: `${url}/alluserpage`,
+        url:'/Member/index',
         method: "post",
         data,
     });
@@ -75,33 +106,6 @@ export let Deleteuserpage = (data)=>{
     return axios({
         url: `${url}/deleteuserpage`,
         method: "post",
-        data,
-    });
-}
-// 新增路由
-export let postAddrouterpage = (data)=>{
-    return axios({
-        url: `${url}/addrouterpage`,
-        method: "post",
-        // 传参
-        data,
-    });
-}
-// 删除配置路由
-export let postDeleteRouterpage = (data)=>{
-    return axios({
-        url: `${url}/deleterouterpage`,
-        method: "post",
-        // 传参
-        data,
-    });
-}
-// 更改路由信息
-export let postUpdateRouterListPage = (data)=>{
-    return axios({
-        url: `${url}/updaterouterlistpage`,
-        method: "post",
-        // 传参
         data,
     });
 }
@@ -134,7 +138,6 @@ export let postUpUserRouter = (data)=>{
     });
 }
 
-
 // 添加角色管理
 export let postAddrolemanagement = (data)=>{
     return axios({
@@ -164,15 +167,7 @@ export let postAddRolePermissions = (data)=>{
         data,
     });
 }
-// 获取角色管理列表
-export let postAllRoleManagement = (data)=>{
-    return axios({
-        url: `${url}/allRoleManagement`,
-        method: "post",
-        // 传参
-        data,
-    });
-}
+
 
 // 修改角色管理
 export let postUpdateRoleManagement = (data)=>{
